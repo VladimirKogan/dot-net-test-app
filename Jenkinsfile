@@ -19,11 +19,11 @@ pipeline {
         }
         stage('Before Deploy to Kubernetes') {
             steps {
-                withCredentials([string(credentialsId: 'k8s', variable: 'KUBECONFIG_CONTENT')]) {
+                withCredentials([string(credentialsId: 'kuber', variable: 'KUBECONFIG_CONTENT')]) {
                     sh '''
                     echo "$KUBECONFIG_CONTENT" > kubeconfig
                     export KUBECONFIG=kubeconfig
-                    kubectl config set-context --current --namespace=devops
+                    kubectl get pods
                     kubectl apply -f k8s-deployment.yaml
                     kubectl apply -f k8s-deployment.yaml
                     '''
