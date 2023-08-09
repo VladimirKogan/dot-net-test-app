@@ -19,15 +19,6 @@ pipeline {
         }
         stage('Before Deploy to Kubernetes') {
             steps {
-                withCredentials([string(credentialsId: 'kuber', variable: 'KUBECONFIG_CONTENT')]) {
-                    sh '''
-                    echo "$KUBECONFIG_CONTENT" > kubeconfig
-                    export KUBECONFIG=kubeconfig
-                    kubectl get pods
-                    kubectl apply -f k8s-deployment.yaml
-                    kubectl apply -f k8s-deployment.yaml
-                    '''
-                }
                 sh 'kubectl get pods'
                 sh 'kubectl get pods -n devops'
             }
