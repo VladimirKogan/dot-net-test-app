@@ -17,6 +17,12 @@ pipeline {
                 sh 'dotnet publish --configuration Release --no-build --output ./publish'
             }
         }
+        stage('Before Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl get pods'
+                sh 'kubectl get pods -n devops'
+            }
+        }
         stage('Deploy to Kubernetes') {
             steps {
                 sh 'kubectl apply -f k8s-deployment.yaml'
