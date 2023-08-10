@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: dotnetcore
-        image: vladimirkogan/dotnet-simple:latest
+        image: adv4000/k8sphp:version2
         ports:
         - containerPort: 80
 ---
