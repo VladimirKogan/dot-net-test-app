@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'jenkins-pod'
+    }
     stages {
         // stage('Clone Git') {
         //     steps {
