@@ -2,12 +2,12 @@ pipeline {
     agent {
         label 'jenkins-pod'
     }
+    environment {
+        DOCKER_IMAGE = 'vladimirkogan/dotnet-simple'
+        DOCKER_TAG = 'latest'
+    }
+
     stages {
-        // stage('Clone Git') {
-        //     steps {
-        //         git 'https://github.com/<your-repo>/<your-app>.git'
-        //     }
-        // }
         stage('Build') {
             steps {
                 sh 'dotnet restore'
@@ -19,15 +19,25 @@ pipeline {
                 sh 'dotnet publish --configuration Release --no-build --output ./publish'
             }
         }
-        stage('LS'){
-            steps{
-                sh 'ls'
-                sh 'ls -la'
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                }
             }
         }
-        stage('Docker Build') {
+        stage('Push Docker Image') {
             steps {
-                sh 'docker build -t simpleapp:latest .'
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker') {
+                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                    }
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl rollout restart deployment/dotnetcore-deployment -n arca'
             }
         }
     }
