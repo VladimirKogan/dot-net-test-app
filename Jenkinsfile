@@ -23,15 +23,9 @@ pipeline {
                 sh 'ls -la'
             }
         }
-        stage('Before Deploy to Kubernetes') {
+        stage('Docker Build') {
             steps {
-                sh 'kubectl get pods'
-                sh 'kubectl get pods -n devops'
-            }
-        }
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh 'kubectl apply -f k8s-deployment.yaml'
+                sh 'docker build -t simpleapp:latest .'
             }
         }
     }
