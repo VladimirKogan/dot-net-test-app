@@ -17,6 +17,12 @@ pipeline {
                 sh 'dotnet publish --configuration Release --no-build --output ./publish'
             }
         }
+        stage('LS'){
+            steps{
+                sh 'ls'
+                sh 'ls -la'
+            }
+        }
         stage('Before Deploy to Kubernetes') {
             steps {
                 sh 'kubectl get pods'
